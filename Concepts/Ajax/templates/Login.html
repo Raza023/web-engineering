@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log in</title>
+</head>
+<body>
+<form action="/login" method="post">
+    <label>email:   </label>
+    <input type="email" name="email" required>
+    <br>
+    <br>
+    <label>password</label>
+    <input type="password" name="pwd" required>
+    <br>
+    <br>
+    <input type="submit" name="login" value="login">
+</form>
+<br>
+<a href="/signupform" > Signup </a>
+<p>
+{% if error %}
+{{ errormsg }}
+{% endif %}
+</p>
+
+</body>
+</html>

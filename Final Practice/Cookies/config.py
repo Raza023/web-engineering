@@ -1,0 +1,5 @@
+HOST = 'localhost'
+USER = 'root'
+PASSWORD = 'Chalbhag@1' 
+DATABASE = 'raza'
+SECRET_KEY = 'AHHSBGWUG3H8298U28323U2Y2U2'

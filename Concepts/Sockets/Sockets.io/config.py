@@ -1,0 +1,5 @@
+SECRET_KEY = "lsdjlsadjidacs2dnsl"
+DATABASE = "sockets"
+PASSWORD = "Chalbhag@1"
+HOST = "localhost"
+USER = "root"

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/chat.css')}}">
+    <title>Document</title>
+</head>
+<body>
+    <section class="msger">
+        <header class="msger-header">
+          <div class="msger-header-title">
+            <i class="fas fa-comment-alt"></i> SimpleChat
+          </div>
+          <div class="msger-header-options">
+            <span><i class="fas fa-cog"></i></span>
+          </div>
+        </header>
+      
+        <main class="msger-chat">
+          <div class="msg left-msg">
+            <div
+             class="msg-img"
+             style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+            ></div>
+      
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">BOT</div>
+                <div class="msg-info-time">12:45</div>
+              </div>
+      
+              <div class="msg-text">
+                Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
+              </div>
+            </div>
+          </div>
+      
+          <div class="msg right-msg">
+            <div
+             class="msg-img"
+             style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"
+            ></div>
+      
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">Sajad</div>
+                <div class="msg-info-time">12:46</div>
+              </div>
+      
+              <div class="msg-text">
+                You can change your name in JS section!
+              </div>
+            </div>
+          </div>
+        </main>
+      
+        <form class="msger-inputarea">
+          <input type="text" class="msger-input" placeholder="Enter your message...">
+          <button type="submit" class="msger-send-btn">Send</button>
+        </form>
+      </section>
+      <script src="{{url_for('static',filename='js/chat.js')}}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+      <script>
+          const socket = io.connect("http://127.0.0.1:5000");
+      
+          socket.on('connect', function () {
+              socket.emit('join_room', {
+                  username: "{{ username }}",
+                  room: "{{ roomID }}"
+              });
+      
+              let message_input = document.getElementsByClassName('msger-input')[0];
+      
+              document.getElementById('message_input_form').onsubmit = function (e) {
+                  e.preventDefault();
+                  let message = message_input.value.trim();
+                  if (message.length) {
+                      socket.emit('send_message', {
+                          username: "{{ username }}",
+                          room: "{{ roomID }}",
+                          message: message
+                      })
+                  }
+                  message_input.value = '';
+                  message_input.focus();
+              }
+          });
+      
+          window.onbeforeunload = function () {
+              socket.emit('leave_room', {
+                  username: "{{ username }}",
+                  room: "{{ roomID }}"
+              })
+          };
+      
+          socket.on('receive_message', function (data) {
+              console.log(data);
+              const newNode = document.createElement('div');
+              newNode.innerHTML = `<b>${data.username}:&nbsp;</b> ${data.message}`;
+              document.getElementById('messages').appendChild(newNode);
+          });
+      
+          socket.on('join_room_announcement', function (data) {
+              console.log(data);
+              if (data.username !== "{{ username }}") {
+                  const newNode = document.createElement('div');
+                  newNode.innerHTML = `<b>${data.username}</b> has joined the room`;
+                  document.getElementById('messages').appendChild(newNode);
+              }
+          });
+      
+          socket.on('leave_room_announcement', function (data) {
+              console.log(data);
+              const newNode = document.createElement('div');
+              newNode.innerHTML = `<b>${data.username}</b> has left the room`;
+              document.getElementById('messages').appendChild(newNode);
+          });
+      </script>
+
+</body>
+</html>

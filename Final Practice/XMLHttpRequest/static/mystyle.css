@@ -1,0 +1,24 @@
+.main{
+    width: 100%;
+    height: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+h1{
+    font-family: 'Brush Script MT', cursive;
+    font-weight: bold;
+}
+body{
+    background: linear-gradient(to right, #0062E6, #33AEFF);}
+abbr[title] {
+    border-bottom: none !important;
+    cursor: inherit !important;
+    text-decoration: none !important;
+  }
+.scrollable{
+    overflow-x: hidden;
+    overflow-y: auto;
+}

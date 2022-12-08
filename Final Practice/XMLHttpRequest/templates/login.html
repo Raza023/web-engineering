@@ -1,0 +1,11 @@
+{%extends "base.html" %}
+{%block body%}
+
+<form action="/login" method="post" class="mt-5 pt-5 ">
+    <center><h1>Name</h1></center>
+    <div class="input-group">
+        <input type="text" placeholder="Name" name="name" class="form-control" required>
+        <input class="btn btn-dark"type="submit" value="Enter chat">
+    </div>
+</form>
+{%endblock%}

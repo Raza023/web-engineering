@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application Room ID: {{roomID}}{{username}}</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/chat.css')}}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+
+
+
+    <section class="msger">
+        <header class="msger-header">
+          <div class="msger-header-title">
+            <i class="fas fa-comment-alt"></i> SimpleChat
+          </div>
+          <div class="msger-header-options">
+            <span><i class="fas fa-cog"></i></span>
+          </div>
+        </header>
+      
+        <main id="msger-chat">
+      {%if messages%}
+        {%for message in messages%}
+
+          {%if message[1]==username%}
+              <div class="msg right-msg">
+                  <div
+                    class="msg-img"
+                    style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"
+                  ></div>
+            
+                  <div class="msg-bubble">
+                    <div class="msg-info">
+                      <div class="msg-info-name">{{message[1]}}</div>
+                      <div class="msg-info-time">{{message[2]}}</div>
+                    </div>
+            
+                    <div class="msg-text">
+                      {{message[0]}}
+                    </div>
+                  </div>
+                </div>
+            {%else%}
+
+
+            <div class="msg left-msg">
+                <div
+                 class="msg-img"
+                 style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+                ></div>
+    
+                <div class="msg-bubble">
+                  <div class="msg-info">
+                    <div class="msg-info-name">{{message[1]}}</div>
+                    <div class="msg-info-time">{{message[2]}}</div>
+                  </div>
+          
+                  <div class="msg-text">
+                    {{message[0]}}
+                  </div>
+                </div>
+              </div>
+
+            {%endif%}
+        {%endfor%}
+
+      {%endif%}
+        </main>
+      
+        <form id="msger-inputarea">
+          <input type="text" id="msger-input" placeholder="Enter your message...">
+          <button type="submit" id="msger-send-btn">Send</button>
+        </form>
+      </section>
+      <!-- <script src="{{url_for('static',filename='js/chat.js')}}"></script> -->
+
+
+
+
+
+
+</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+
+      
+        document.getElementById("msger-chat").scrollTop += 500000;
+      
+
+
+      const socket = io.connect("http://127.0.0.1:5000");
+        socket.on('connect', function () {
+            socket.emit('join_room', {
+                username: "{{ username }}",
+                room: "{{ roomID }}"
+            });
+    
+            let message_input = document.getElementById('msger-input');
+                        
+            document.getElementById('msger-inputarea').onsubmit = function (e) {
+              console.log("dsa");
+                e.preventDefault();
+                  const d = new Date();
+                  let t = d.getHours()+":"+d.getMinutes();
+                let message = message_input.value.trim();
+                if (message.length) {
+                    socket.emit('send_message', {
+                        username: "{{ username }}",
+                        room: "{{ roomID }}",
+                        message: message,
+                        time : t
+                    })
+                }
+                message_input.value = '';
+                message_input.focus();
+            }
+        });
+    
+        window.onbeforeunload = function () {
+            socket.emit('leave_room', {
+                username: "{{ username }}",
+                room: "{{ roomID }}"
+            })
+        };
+    
+        socket.on('receive_message', function (data) {
+            console.log(data);
+            const newNode = document.createElement('div');
+            newNode.style.position="relative";
+            if(data.username=="{{username}}")
+            {
+                newNode.style.float="right";
+                appendMessage(data.username, "https://image.flaticon.com/icons/svg/327/327779.svg", "right",data.message,data.time)
+                //newNode.innerHTML = `<br><b>${data.username}:&nbsp;</b> ${data.message}<br>`;
+            }
+            else{
+                newNode.style.float="left";
+                appendMessage(data.username, "https://image.flaticon.com/icons/svg/327/327779.svg", "left",data.message,data.time)
+//                newNode.innerHTML = `<br><b>${data.username}:&nbsp;</b> ${data.message} <br>`;
+            }
+           // newNode.innerHTML = `<b>${data.username}:&nbsp;</b> ${data.message} <br>`;
+  //          document.getElementById('msger-chat').appendChild(newNode);
+        });
+    
+        socket.on('join_room_announcement', function (data) {
+            console.log(data);
+            if (data.username !== "{{ username }}") {
+                const newNode = document.createElement('div');
+            //    newNode.innerHTML = `<b>${data.username}</b> has joined the room`;
+                document.getElementById('msger-chat').appendChild(newNode);
+            }
+        });
+    
+        socket.on('leave_room_announcement', function (data) {
+            console.log(data);
+            const newNode = document.createElement('div');
+            newNode.innerHTML = `<b>${data.username}</b> has left the room`;
+            document.getElementById('messages').appendChild(newNode);
+        });
+
+
+
+
+
+
+
+        function appendMessage(name, img, side, text,time) {
+          const msgHTML = `
+            <div class="msg ${side}-msg">
+              <div class="msg-img" style="background-image: url(${img})"></div>
+        
+              <div class="msg-bubble">
+                <div class="msg-info">
+                  <div class="msg-info-name">${name}</div>
+                  <div class="msg-info-time">${time}</div>
+                </div>
+                <div class="msg-text">${text}</div>
+              </div>
+            </div>
+          `;
+          document.getElementById("msger-chat").insertAdjacentHTML("beforeend", msgHTML);
+          document.getElementById("msger-chat").scrollTop += 500000;
+        }
+
+    </script>
+</html>

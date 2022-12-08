@@ -1,0 +1,16 @@
+{%extends "base.html" %}
+{%block body%}
+        <h1 ><abbr title="Developed by Talha">Messages</abbr></h1>
+        <div class="card card2" style="width: 30rem; height: 35rem;">
+            <div class="card-body scrollable">
+            
+            <h6 class="card-subtitle mb-2 text-muted"><p id="appeartext"></p></h6>
+            
+            </div>
+            <div class="input-group">
+                <input type="text" placeholder="message" name="textField" id="textField" class="form-control"/>
+                <button class="btn btn-dark" onclick="sendText();" ><i>Send</i></button>
+            </div>
+        </div>
+        <script src="/static/tempapp.js"></script>
+{% endblock %}

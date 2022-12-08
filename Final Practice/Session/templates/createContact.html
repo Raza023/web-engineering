@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>creating contact</title>
+    </head>
+    <body>
+        <h1>Welcome {{ email }}</h1>
+        <h1>{{ log }}</h1>
+        <form action="/createcontact" method="post">
+            <label>Contact Name</label>
+            <input type="text" name="name"/>
+            <br>
+            <br>
+            <label>Contact Mobile</label>
+            <input type="text" name="mobile"/>
+            <br>
+            <br>
+            <label>Contact City</label>
+            <input type="text" name="city"/>
+            <br>
+            <br>
+            <label>Contact Profession</label>
+            <input type="text" name="profession"/>
+            <br>
+            <br>
+            <input type="submit" name="login" value="Add">
+        </form>
+        <br>
+        <br>
+        <p>Do you want to delete contact?</p>
+        <form action="/deletecontact" method="post">
+            <input type="submit" name="delete" value="delete">
+        </form>
+        <h1>{{ add }}</h1>
+        {% if error %}
+        {{ errormsg }}
+        {% endif %}
+    </body>
+</html>

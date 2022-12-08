@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Contact</title>
+    <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+      <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+  	<script
+  src="http://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+
+</head>
+<body>
+    <center>
+    <p>Welcome {{ email }}</p>
+    <select name="city" id="city">
+        <option value="sydney">sydney</option>
+        <option value="Karachi">Karachi</option>
+        <option value="Lahore" selected>Lahore</option>
+        <option value="Old Forge">Old Forge</option>
+    </select>
+    </center>
+    <table id ="show" style="width:100%">
+        <thead>
+            <tr>
+                <th>Cust name</th>
+                <th>Cust phone</th>
+                <th>Cust City</th>
+                <th>Cust profession</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in list1 %}
+            <tr>
+                <td>{{ i[0] }}</td>
+                <td>{{ i[1] }}</td>
+                <td>{{ i[2] }}</td>
+                <td>{{ i[3] }}</td>
+            </tr>
+        {% endfor %}
+        <!-- <tfoot>
+            <tr>
+                <th>Cust name</th>
+                <th>Cust phone</th>
+                <th>Cust City</th>
+                <th>Cust profession</th>
+            </tr>
+        </tfoot> -->
+        </tbody>
+    </table>
+
+    <form action = "/updatecontact", method="post">
+        <label>Enter contact name to update: </label>
+        <input type="text" name="name" required>
+        <button type="submit" value="submit" name="submit">Submit</button>
+    </form>
+    <h1>{{ msg }}</h1>
+    {% if error %}
+        {{ errormsg }}
+    {% endif %}
+    <script>
+        var myData
+        $(document.body).on('click',"#city",function ()
+        {
+            var optVal = $("#city option:selected").val();
+            var table;
+            var data = 'city='+optVal+'&val='+optVal;
+                $.ajax
+                ({
+                    type:"GET",
+                    url:"/getContacts",
+                    data:data,
+                    success: function(result)
+                    {
+                        myData = result
+                        //alert(myData)
+                        if(myData !=null || myData !="")
+                        {
+                            $('#show').DataTable
+                            ({
+                                data: myData,
+                                destroy: true,
+                                columns:[
+                                            { title: "Cust name" },
+                                            { title: " Cust phone" },
+                                            { title: "Cust City" },
+                                            { title: "Cust profession" }
+                                        ]
+                            });
+                        }
+                    }
+                });
+        });
+        
+        $(document).ready(function() {
+            $('#show').DataTable();
+        });
+    </script>
+</body>
+</html>

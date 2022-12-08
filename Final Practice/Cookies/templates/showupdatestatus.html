@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update status</title>
+</head>
+<body>
+<h1>Hi {{ email }}!</h1>
+<h1>{{ msg }}</h1>
+<p>
+<a href="/dashboard"><input type="button" value="Dashboard"></a>
+</p>
+<p>
+    {% if error %}
+    {{ errormsg }}
+    {% endif %}
+</p>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Contact</title>
+</head>
+<body>
+    <p>Welcome {{ email }}</p>
+    <form action="/update" method="post">
+        <label>Contact Name</label>
+        <input type="text" name="name" required/>
+        <br>
+        <br>
+        <label>Contact Mobile</label>
+        <input type="text" name="mobile" required/>
+        <br>
+        <br>
+        <label>Contact City</label>
+        <input type="text" name="city" required/>
+        <br>
+        <br>
+        <label>Contact Profession</label>
+        <input type="text" name="profession" required/>
+        <br>
+        <br>
+        <input type="submit" name="login" value="Update">
+    </form>
+    <p>{{ msg }}</p>
+</body>
+</html>
